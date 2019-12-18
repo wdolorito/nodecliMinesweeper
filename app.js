@@ -39,63 +39,54 @@ const getminecount = (position, rows, cols, board, specials, len) => {
   const xy = getrowcol(position, cols)
   const row = xy.y
   const col = xy.x
-  let tester = {}
   let pos = 0
   const gettests = checkspecials(position, specials)
 
   // check top left
   if(gettests.tl) {
-    tester = { x: col - 1, y: row - 1 }
-    pos = getpos(tester.y, tester.x, rows, cols, len)
+    pos = getpos(row - 1, col - 1, rows, cols, len)
     if(checkpos(board[pos])) counter++
   }
 
   // check top
   if(gettests.t) {
-    tester = { x: col, y: row - 1 }
-    pos = getpos(tester.y, tester.x, rows, cols, len)
+    pos = getpos(row - 1, col, rows, cols, len)
     if(checkpos(board[pos])) counter++
   }
 
   // check top right
   if(gettests.r) {
-    tester = { x: col + 1, y: row - 1 }
-    pos = getpos(tester.y, tester.x, rows, cols, len)
+    pos = getpos(row - 1, col + 1, rows, cols, len)
     if(checkpos(board[pos])) counter++
   }
 
   // check left
   if(gettests.l) {
-    tester = { x: col - 1, y: row }
-    pos = getpos(tester.y, tester.x, rows, cols, len)
+    pos = getpos(row, col - 1, rows, cols, len)
     if(checkpos(board[pos])) counter++
   }
 
   // check right
   if(gettests.r) {
-    tester = { x: col + 1, y: row }
-    pos = getpos(tester.y, tester.x, rows, cols, len)
+    pos = getpos(row, col + 1, rows, cols, len)
     if(checkpos(board[pos])) counter++
   }
 
   // check bottom left
   if(gettests.bl) {
-    tester = { x: col - 1, y: row + 1 }
-    pos = getpos(tester.y, tester.x, rows, cols, len)
+    pos = getpos(row + 1, col - 1, rows, cols, len)
     if(checkpos(board[pos])) counter++
   }
 
   // check bottom
   if(gettests.b) {
-    tester = { x: col, y: row + 1}
-    pos = getpos(tester.y, tester.x, rows, cols, len)
+    pos = getpos(row + 1, col, rows, cols, len)
     if(checkpos(board[pos])) counter++
   }
 
   // check bottom right
   if(gettests.br) {
-    tester = { x: col + 1, y: row + 1 }
-    pos = getpos(tester.y, tester.x, rows, cols, len)
+    pos = getpos(row + 1, col + 1, rows, cols, len)
     if(checkpos(board[pos])) counter++
   }
 
@@ -406,6 +397,8 @@ rl.on('line', line => {
       case 'N':
       case 'n':
         currentgame = game('novice', 10, 9, 9)
+        drawBoard(currentgame, true)
+        console.log()
         drawBoard(currentgame)
         rl.setPrompt(ngame)
         startgame()
