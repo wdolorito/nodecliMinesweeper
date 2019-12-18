@@ -406,8 +406,6 @@ rl.on('line', line => {
       case 'N':
       case 'n':
         currentgame = game('novice', 10, 9, 9)
-        drawBoard(currentgame, true)
-        console.log('\n\n')
         drawBoard(currentgame)
         rl.setPrompt(ngame)
         startgame()
