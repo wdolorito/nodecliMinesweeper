@@ -44,49 +44,49 @@ const getminecount = (position, rows, cols, board, specials, len) => {
 
   // check top left
   if(gettests.tl) {
-    pos = getpos(row - 1, col - 1, rows, cols, len)
+    pos = getpos(row - 1, col - 1, rows, cols)
     if(checkpos(board[pos])) counter++
   }
 
   // check top
   if(gettests.t) {
-    pos = getpos(row - 1, col, rows, cols, len)
+    pos = getpos(row - 1, col, rows, cols)
     if(checkpos(board[pos])) counter++
   }
 
   // check top right
   if(gettests.r) {
-    pos = getpos(row - 1, col + 1, rows, cols, len)
+    pos = getpos(row - 1, col + 1, rows, cols)
     if(checkpos(board[pos])) counter++
   }
 
   // check left
   if(gettests.l) {
-    pos = getpos(row, col - 1, rows, cols, len)
+    pos = getpos(row, col - 1, rows, cols)
     if(checkpos(board[pos])) counter++
   }
 
   // check right
   if(gettests.r) {
-    pos = getpos(row, col + 1, rows, cols, len)
+    pos = getpos(row, col + 1, rows, cols)
     if(checkpos(board[pos])) counter++
   }
 
   // check bottom left
   if(gettests.bl) {
-    pos = getpos(row + 1, col - 1, rows, cols, len)
+    pos = getpos(row + 1, col - 1, rows, cols)
     if(checkpos(board[pos])) counter++
   }
 
   // check bottom
   if(gettests.b) {
-    pos = getpos(row + 1, col, rows, cols, len)
+    pos = getpos(row + 1, col, rows, cols)
     if(checkpos(board[pos])) counter++
   }
 
   // check bottom right
   if(gettests.br) {
-    pos = getpos(row + 1, col + 1, rows, cols, len)
+    pos = getpos(row + 1, col + 1, rows, cols)
     if(checkpos(board[pos])) counter++
   }
 
@@ -100,7 +100,7 @@ const getrowcol = (pos, cols) => {
   return xy
 }
 
-const getpos = (row, col, rows, cols, len) => {
+const getpos = (row, col, rows, cols) => {
   let toreturn = -1
   let pos
   if(row <= rows && col <= cols) toreturn = (row * cols) + col
@@ -281,7 +281,7 @@ const testpos = (row, col) => {
   const checked = currentgame.running.checked
   const sol = currentgame.solution
   const len = currentgame.len
-  const pos = getpos(row, col, currentgame.rows, currentgame.cols, len)
+  const pos = getpos(row, col, currentgame.rows, currentgame.cols)
   if(pos >= 0) {
     const solval = sol[pos]
     board[pos] = solval
