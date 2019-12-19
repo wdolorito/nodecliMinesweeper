@@ -16,7 +16,7 @@ const rl = readline.createInterface({
 const createsolution = (rows, cols, mines, specials, len) => {
   let sol = initboard(rows, cols, len)
   for(let count = 0; count < mines; count++) {
-    let mine = Math.floor(Math.random() * Math.floor(len))
+    const mine = Math.floor(Math.random() * Math.floor(len))
     if(sol[mine] == '.') {
       sol[mine] = 'X'
     } else {
@@ -341,7 +341,7 @@ const startgame = () => {
 const endgame = win => {
   gamerunning = false
   console.log()
-  drawBoard(currentgame)
+  drawBoard(currentgame, !win)
   console.timeEnd('\ngame timer')
   if(win) {
     console.log('\nYou won :)')
