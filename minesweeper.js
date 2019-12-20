@@ -45,17 +45,6 @@ const testpos = (row, col) => {
   }
 }
 
-const checkgame = () => {
-  const len = currentgame.len
-  const checked = currentgame.running.checked
-  const mines = currentgame.mines
-  let counter = 0
-  for(let count = 0; count < len; count++) {
-    if(checked[count] == '.') counter++
-  }
-  if(counter == mines) endgame(true)
-}
-
 const badresp = resp => {
   console.log(`\n  ${resp} is not a valid entry\n`)
   drawBoard(currentgame)
@@ -399,6 +388,17 @@ class Minesweeper {
     } else {
       console.log('\nYou lost :(')
     }
+  }
+
+  checkgame() {
+    const len = this.#currentgame.len
+    const checked = this.#currentgame.running.checked
+    const mines = this.#currentgame.mines
+    let counter = 0
+    for(let count = 0; count < len; count++) {
+      if(checked[count] == '.') counter++
+    }
+    if(counter == mines) endgame(true)
   }
 }
 
