@@ -398,7 +398,7 @@ class Minesweeper {
     for(let count = 0; count < len; count++) {
       if(checked[count] == '.') counter++
     }
-    if(counter == mines) endgame(true)
+    if(counter == mines) this.endgame(true)
   }
 }
 
