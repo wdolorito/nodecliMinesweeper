@@ -1,187 +1,3 @@
-
-let currentgame = {}
-let gamerunning = false
-
-const createsolution = (rows, cols, mines, specials, len) => {
-  let sol = initboard(rows, cols, len)
-  for(let count = 0; count < mines; count++) {
-    const mine = Math.floor(Math.random() * Math.floor(len))
-    if(sol[mine] == '.') {
-      sol[mine] = 'X'
-    } else {
-      count--
-    }
-  }
-  sol = populatenumbers(rows, cols, sol, specials, len)
-  return sol
-}
-
-const populatenumbers = (rows, cols, board, specials, len) => {
-  for(let count = 0; count < len; count++) {
-    if(board[count] == '.') board[count] = getminecount(count, rows, cols, board, specials, len)
-  }
-  return board
-}
-
-const getminecount = (position, rows, cols, board, specials, len) => {
-  let counter = 0
-  const xy = getrowcol(position, cols)
-  const row = xy.y
-  const col = xy.x
-  let pos = 0
-  const gettests = checkspecials(position, specials)
-
-  // check top left
-  if(gettests.tl) {
-    pos = getpos(row - 1, col - 1, rows, cols)
-    if(checkpos(board[pos])) counter++
-  }
-
-  // check top
-  if(gettests.t) {
-    pos = getpos(row - 1, col, rows, cols)
-    if(checkpos(board[pos])) counter++
-  }
-
-  // check top right
-  if(gettests.r) {
-    pos = getpos(row - 1, col + 1, rows, cols)
-    if(checkpos(board[pos])) counter++
-  }
-
-  // check left
-  if(gettests.l) {
-    pos = getpos(row, col - 1, rows, cols)
-    if(checkpos(board[pos])) counter++
-  }
-
-  // check right
-  if(gettests.r) {
-    pos = getpos(row, col + 1, rows, cols)
-    if(checkpos(board[pos])) counter++
-  }
-
-  // check bottom left
-  if(gettests.bl) {
-    pos = getpos(row + 1, col - 1, rows, cols)
-    if(checkpos(board[pos])) counter++
-  }
-
-  // check bottom
-  if(gettests.b) {
-    pos = getpos(row + 1, col, rows, cols)
-    if(checkpos(board[pos])) counter++
-  }
-
-  // check bottom right
-  if(gettests.br) {
-    pos = getpos(row + 1, col + 1, rows, cols)
-    if(checkpos(board[pos])) counter++
-  }
-
-  return counter
-}
-
-const getrowcol = (pos, cols) => {
-  let xy = {}
-  xy.x = pos % cols
-  xy.y = Math.floor(pos / cols)
-  return xy
-}
-
-const getpos = (row, col, rows, cols) => {
-  let toreturn = -1
-  let pos
-  if(row <= rows && col <= cols) toreturn = (row * cols) + col
-  return toreturn
-}
-
-const checkpos = (val) => {
-  let toreturn = false
-  if(val == 'X') toreturn = true
-  return toreturn
-}
-
-const checkspecials = (pos, specials) => {
-  let tl = true
-  let t = true
-  let tr = true
-  let l = true
-  let r = true
-  let bl = true
-  let b = true
-  let br = true
-
-  const istlc = pos == specials.tlc
-  const istrc = pos == specials.trc
-  const isblc = pos == specials.blc
-  const isbrc = pos == specials.brc
-  const iste = specials.te.includes(pos)
-  const isbe = specials.be.includes(pos)
-  const isle = specials.le.includes(pos)
-  const isre = specials.re.includes(pos)
-
-  if(istlc) {
-    tl = false
-    t = false
-    tr = false
-    l = false
-    bl = false
-  }
-  if(istrc) {
-    tl = false
-    t = false
-    tr = false
-    r = false
-    br = false
-  }
-  if(isblc) {
-    tl = false
-    l = false
-    bl = false
-    b = false
-    br = false
-  }
-  if(isbrc) {
-    tr = false
-    r = false
-    bl = false
-    b = false
-    br = false
-  }
-  if(iste) {
-    tl = false
-    t = false
-    tr = false
-  }
-  if(isbe) {
-    bl = false
-    b = false
-    br = false
-  }
-  if(isle) {
-    tl = false
-    l = false
-    bl = false
-  }
-  if(isre) {
-    tr = false
-    r = false
-    br = false
-  }
-
-  return {
-           tl: tl,
-           t: t,
-           tr: tr,
-           l: l,
-           r: r,
-           bl: bl,
-           b: b,
-           br: br
-         }
-}
-
 const drawBoard = (board, sol) => {
   const r = board.rows
   const c = board.cols
@@ -332,6 +148,14 @@ class Minesweeper {
     }
     this.currentgame = game
   }
+
+  getboard() {
+    return this.currentgame
+  }
+
+  isrunning() {
+    return this.gamerunning
+  }
 }
 
 const game = (newtype, newmines, newrows, newcols) => {
@@ -389,6 +213,186 @@ const initboard = (rows, cols, len) => {
   const board = new Array(len)
   board.fill('.', 0, len)
   return board
+}
+
+const createsolution = (rows, cols, mines, specials, len) => {
+  let sol = initboard(rows, cols, len)
+  for(let count = 0; count < mines; count++) {
+    const mine = Math.floor(Math.random() * Math.floor(len))
+    if(sol[mine] == '.') {
+      sol[mine] = 'X'
+    } else {
+      count--
+    }
+  }
+  sol = populatenumbers(rows, cols, sol, specials, len)
+  return sol
+}
+
+const populatenumbers = (rows, cols, board, specials, len) => {
+  for(let count = 0; count < len; count++) {
+    if(board[count] == '.') board[count] = getminecount(count, rows, cols, board, specials, len)
+  }
+  return board
+}
+
+const getminecount = (position, rows, cols, board, specials, len) => {
+  let counter = 0
+  const xy = getrowcol(position, cols)
+  const row = xy.y
+  const col = xy.x
+  let pos = 0
+  const gettests = checkspecials(position, specials)
+
+  // check top left
+  if(gettests.tl) {
+    pos = getpos(row - 1, col - 1, rows, cols)
+    if(checkpos(board[pos])) counter++
+  }
+
+  // check top
+  if(gettests.t) {
+    pos = getpos(row - 1, col, rows, cols)
+    if(checkpos(board[pos])) counter++
+  }
+
+  // check top right
+  if(gettests.r) {
+    pos = getpos(row - 1, col + 1, rows, cols)
+    if(checkpos(board[pos])) counter++
+  }
+
+  // check left
+  if(gettests.l) {
+    pos = getpos(row, col - 1, rows, cols)
+    if(checkpos(board[pos])) counter++
+  }
+
+  // check right
+  if(gettests.r) {
+    pos = getpos(row, col + 1, rows, cols)
+    if(checkpos(board[pos])) counter++
+  }
+
+  // check bottom left
+  if(gettests.bl) {
+    pos = getpos(row + 1, col - 1, rows, cols)
+    if(checkpos(board[pos])) counter++
+  }
+
+  // check bottom
+  if(gettests.b) {
+    pos = getpos(row + 1, col, rows, cols)
+    if(checkpos(board[pos])) counter++
+  }
+
+  // check bottom right
+  if(gettests.br) {
+    pos = getpos(row + 1, col + 1, rows, cols)
+    if(checkpos(board[pos])) counter++
+  }
+
+  return counter
+}
+
+const getrowcol = (pos, cols) => {
+  let xy = {}
+  xy.x = pos % cols
+  xy.y = Math.floor(pos / cols)
+  return xy
+}
+
+const checkspecials = (pos, specials) => {
+  let tl = true
+  let t = true
+  let tr = true
+  let l = true
+  let r = true
+  let bl = true
+  let b = true
+  let br = true
+
+  const istlc = pos == specials.tlc
+  const istrc = pos == specials.trc
+  const isblc = pos == specials.blc
+  const isbrc = pos == specials.brc
+  const iste = specials.te.includes(pos)
+  const isbe = specials.be.includes(pos)
+  const isle = specials.le.includes(pos)
+  const isre = specials.re.includes(pos)
+
+  if(istlc) {
+    tl = false
+    t = false
+    tr = false
+    l = false
+    bl = false
+  }
+  if(istrc) {
+    tl = false
+    t = false
+    tr = false
+    r = false
+    br = false
+  }
+  if(isblc) {
+    tl = false
+    l = false
+    bl = false
+    b = false
+    br = false
+  }
+  if(isbrc) {
+    tr = false
+    r = false
+    bl = false
+    b = false
+    br = false
+  }
+  if(iste) {
+    tl = false
+    t = false
+    tr = false
+  }
+  if(isbe) {
+    bl = false
+    b = false
+    br = false
+  }
+  if(isle) {
+    tl = false
+    l = false
+    bl = false
+  }
+  if(isre) {
+    tr = false
+    r = false
+    br = false
+  }
+
+  return {
+           tl: tl,
+           t: t,
+           tr: tr,
+           l: l,
+           r: r,
+           bl: bl,
+           b: b,
+           br: br
+         }
+}
+
+const getpos = (row, col, rows, cols) => {
+  let toreturn = -1
+  let pos
+  if(row <= rows && col <= cols) toreturn = (row * cols) + col
+  return toreturn
+}
+
+const checkpos = (val) => {
+  let toreturn = false
+  if(val == 'X') toreturn = true
+  return toreturn
 }
 
 module.exports = Minesweeper

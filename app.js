@@ -5,14 +5,14 @@ const minesweeper = new Minesweeper()
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-  prompt: minesweeper.getpick()
+  prompt: minesweeper.getpickprompt()
 })
 
 rl.prompt()
 
 rl.on('line', line => {
   const resp = line.trim()
-  if(gamerunning) {
+  if(minesweeper.isrunning()) {
     if(resp.length > 1) {
       const remwhite = resp.replace(/ /g, '')
       const coordinates = remwhite.split(',')
@@ -47,23 +47,24 @@ rl.on('line', line => {
       case 'N':
       case 'n':
         minesweeper.setcurrentgame()
-        drawBoard(currentgame)
+        // drawBoard(currentgame)
         rl.setPrompt(minesweeper.getnprompt())
-        startgame()
+        console.log(minesweeper.getboard())
+        // startgame()
         break;
       case 'I':
       case 'i':
         minesweeper.setcurrentgame('intermediate')
-        drawBoard(currentgame)
+        // drawBoard(currentgame)
         rl.setPrompt(minesweeper.getiprompt())
-        startgame()
+        // startgame()
         break;
       case 'E':
       case 'e':
         minesweeper.setcurrentgame('expert')
-        drawBoard(currentgame)
+        // drawBoard(currentgame)
         rl.setPrompt(minesweeper.geteprompt())
-        startgame()
+        // startgame()
         break;
       case 'Q':
       case 'q':
@@ -71,7 +72,7 @@ rl.on('line', line => {
         break;
       default:
         console.log(`\n  ${resp} is not a valid choice\n`)
-        rl.setPrompt(pickgame)
+        rl.setPrompt(minesweeper.getpickprompt())
         break;
     }
     rl.prompt()
