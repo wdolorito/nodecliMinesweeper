@@ -107,30 +107,31 @@ const badresp = resp => {
 }
 
 class Minesweeper {
+  #pickgame = 'What game do you want to play?\n\t(N)ovice\n\t(I)ntermediate\n\t(E)xpert\n\t(Q)uit\n'
+  #dprompt = 'pick a (row, column) or (Q)uit: '
+  #ngame = '\nNovice game> ' + this.#dprompt
+  #igame = '\nIntermediate game> ' + this.#dprompt
+  #egame = '\nExpert game> ' + this.dprompt
+  #currentgame = {}
+  #gamerunning = false
+
   constructor() {
-    this.pickgame = 'What game do you want to play?\n\t(N)ovice\n\t(I)ntermediate\n\t(E)xpert\n\t(Q)uit\n'
-    this.dprompt = 'pick a (row, column) or (Q)uit: '
-    this.ngame = '\nNovice game> ' + this.dprompt
-    this.igame = '\nIntermediate game> ' + this.dprompt
-    this.egame = '\nExpert game> ' + this.dprompt
-    this.currentgame = {}
-    this.gamerunning = false
   }
 
-  getpickprompt() {
-    return this.pickgame
+  get pick() {
+    return this.#pickgame
   }
 
-  getnprompt() {
-    return this.ngame
+  get nprompt() {
+    return this.#ngame
   }
 
-  getiprompt() {
-    return this.igame
+  get iprompt() {
+    return this.#igame
   }
 
-  geteprompt() {
-    return this.egame
+  get eprompt() {
+    return this.#egame
   }
 
   setcurrentgame(type) {
@@ -150,11 +151,11 @@ class Minesweeper {
   }
 
   getboard() {
-    return this.currentgame
+    return this.#currentgame
   }
 
   isrunning() {
-    return this.gamerunning
+    return this.#gamerunning
   }
 }
 
