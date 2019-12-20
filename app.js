@@ -13,18 +13,18 @@ const minesweeper = new Minesweeper()
 // console.log(minesweeper.iprompt)
 // console.log(minesweeper.eprompt)
 
+// minesweeper.currentgame = 'novice'
+//
+// console.log(minesweeper.running)
+//
+// minesweeper.currentgame = 'intermediate'
+//
+// console.log(minesweeper.running)
+
 minesweeper.currentgame = 'novice'
-
-console.log(minesweeper.running)
-console.log(minesweeper.board)
-console.log(minesweeper.solution)
-
-minesweeper.currentgame = 'intermediate'
-
-console.log(minesweeper.running)
-console.log(minesweeper.board)
-console.log(minesweeper.solution)
-
+minesweeper.drawboard()
+console.log()
+minesweeper.drawsolution()
 
 // rl.prompt()
 

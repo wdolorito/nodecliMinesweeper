@@ -1,4 +1,4 @@
-const drawBoard = (board, sol) => {
+const drawgame = (board, sol) => {
   const r = board.rows
   const c = board.cols
   let game = board.running.board
@@ -375,14 +375,6 @@ class Minesweeper {
     return this.#egame
   }
 
-  get board() {
-    return this.#currentgame.running.board
-  }
-
-  get solution() {
-    return this.#currentgame.solution
-  }
-
   get running() {
     return this.#gamerunning
   }
@@ -401,6 +393,14 @@ class Minesweeper {
       default:
     }
     this.#currentgame = newgame
+  }
+
+  drawboard() {
+    drawgame(this.#currentgame)
+  }
+
+  drawsolution() {
+    drawgame(this.#currentgame, true)
   }
 }
 
