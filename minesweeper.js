@@ -106,58 +106,7 @@ const badresp = resp => {
   rl.prompt()
 }
 
-class Minesweeper {
-  #pickgame = 'What game do you want to play?\n\t(N)ovice\n\t(I)ntermediate\n\t(E)xpert\n\t(Q)uit\n'
-  #dprompt = 'pick a (row, column) or (Q)uit: '
-  #ngame = '\nNovice game> ' + this.#dprompt
-  #igame = '\nIntermediate game> ' + this.#dprompt
-  #egame = '\nExpert game> ' + this.dprompt
-  #currentgame = {}
-  #gamerunning = false
-
-  constructor() {
-  }
-
-  get pick() {
-    return this.#pickgame
-  }
-
-  get nprompt() {
-    return this.#ngame
-  }
-
-  get iprompt() {
-    return this.#igame
-  }
-
-  get eprompt() {
-    return this.#egame
-  }
-
-  setcurrentgame(type) {
-    let game = game('novice', 10, 9, 9)
-    switch(type) {
-      case 'novice':
-        break
-      case 'intermediate':
-        game = game(type, 40, 16, 16)
-        break
-      case 'expert':
-        game = game(type, 99, 16, 30)
-        break
-      default:
-    }
-    this.currentgame = game
-  }
-
-  getboard() {
-    return this.#currentgame
-  }
-
-  isrunning() {
-    return this.#gamerunning
-  }
-}
+/*****************************************************************************/
 
 const game = (newtype, newmines, newrows, newcols) => {
   const len = newrows * newcols
@@ -394,6 +343,65 @@ const checkpos = (val) => {
   let toreturn = false
   if(val == 'X') toreturn = true
   return toreturn
+}
+
+/*****************************************************************************/
+
+class Minesweeper {
+  #pickgame = 'What game do you want to play?\n\t(N)ovice\n\t(I)ntermediate\n\t(E)xpert\n\t(Q)uit\n'
+  #dprompt = 'pick a (row, column) or (Q)uit: '
+  #ngame = '\nNovice game> ' + this.#dprompt
+  #igame = '\nIntermediate game> ' + this.#dprompt
+  #egame = '\nExpert game> ' + this.#dprompt
+  #currentgame = {}
+  #gamerunning = false
+
+  constructor() {
+  }
+
+  get pick() {
+    return this.#pickgame
+  }
+
+  get nprompt() {
+    return this.#ngame
+  }
+
+  get iprompt() {
+    return this.#igame
+  }
+
+  get eprompt() {
+    return this.#egame
+  }
+
+  get board() {
+    return this.#currentgame.running.board
+  }
+
+  get solution() {
+    return this.#currentgame.solution
+  }
+
+  get running() {
+    return this.#gamerunning
+  }
+
+  set currentgame(type) {
+    let newgame = game('novice', 10, 9, 9)
+    switch(type) {
+      case 'novice':
+        break
+      case 'intermediate':
+        newgame = game(type, 40, 16, 16)
+        break
+      case 'expert':
+        newgame = game(type, 99, 16, 30)
+        break
+      default:
+    }
+    this.#currentgame = newgame
+  }
 }
 
 module.exports = Minesweeper
