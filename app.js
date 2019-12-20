@@ -2,6 +2,16 @@ const readline = require('readline')
 const Minesweeper = require('./minesweeper')
 const minesweeper = new Minesweeper()
 
+minesweeper.currentgame = 'novice'
+console.log(minesweeper.running)
+minesweeper.startgame()
+console.log(minesweeper.running)
+minesweeper.endgame(true)
+
+minesweeper.currentgame = 'intermediate'
+minesweeper.startgame()
+minesweeper.endgame()
+
 // const rl = readline.createInterface({
 //   input: process.stdin,
 //   output: process.stdout,
@@ -21,10 +31,10 @@ const minesweeper = new Minesweeper()
 //
 // console.log(minesweeper.running)
 
-minesweeper.currentgame = 'novice'
-minesweeper.drawboard()
-console.log()
-minesweeper.drawsolution()
+// minesweeper.currentgame = 'novice'
+// minesweeper.drawboard()
+// console.log()
+// minesweeper.drawsolution()
 
 // rl.prompt()
 

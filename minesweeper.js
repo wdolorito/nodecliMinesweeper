@@ -1,28 +1,3 @@
-const drawgame = (board, sol) => {
-  const r = board.rows
-  const c = board.cols
-  let game = board.running.board
-  if(sol) game = board.solution
-
-  let row = ''
-  for(let count = 0; count < c; count++) {
-    row += '\t' + count
-  }
-  console.log(`${row}\n\n`)
-
-  for(let rows = 0; rows < r; rows++) {
-    row = rows
-    let pos
-    let val
-    for(let cols = 0; cols < c; cols++) {
-      pos = (rows * c) + cols
-      val = game[pos]
-      row += '\t' + val
-    }
-    console.log(row)
-  }
-}
-
 const testpos = (row, col) => {
   const board = currentgame.running.board
   const specials = currentgame.specials
@@ -79,25 +54,6 @@ const checkgame = () => {
     if(checked[count] == '.') counter++
   }
   if(counter == mines) endgame(true)
-}
-
-const startgame = () => {
-  gamerunning = true
-  console.time('\ngame timer')
-}
-
-const endgame = win => {
-  gamerunning = false
-  console.log()
-  drawBoard(currentgame, !win)
-  console.timeEnd('\ngame timer')
-  if(win) {
-    console.log('\nYou won :)')
-  } else {
-    console.log('\nYou lost :(')
-  }
-
-  rl.close()
 }
 
 const badresp = resp => {
@@ -345,6 +301,31 @@ const checkpos = (val) => {
   return toreturn
 }
 
+const drawgame = (board, sol) => {
+  const r = board.rows
+  const c = board.cols
+  let game = board.running.board
+  if(sol) game = board.solution
+
+  let row = ''
+  for(let count = 0; count < c; count++) {
+    row += '\t' + count
+  }
+  console.log(`${row}\n\n`)
+
+  for(let rows = 0; rows < r; rows++) {
+    row = rows
+    let pos
+    let val
+    for(let cols = 0; cols < c; cols++) {
+      pos = (rows * c) + cols
+      val = game[pos]
+      row += '\t' + val
+    }
+    console.log(row)
+  }
+}
+
 /*****************************************************************************/
 
 class Minesweeper {
@@ -401,6 +382,23 @@ class Minesweeper {
 
   drawsolution() {
     drawgame(this.#currentgame, true)
+  }
+
+  startgame() {
+    this.#gamerunning = true
+    console.time('\ngame timer')
+  }
+
+  endgame(win) {
+    this.#gamerunning = false
+    console.log()
+    drawgame(this.#currentgame, !win)
+    console.timeEnd('\ngame timer')
+    if(win) {
+      console.log('\nYou won :)')
+    } else {
+      console.log('\nYou lost :(')
+    }
   }
 }
 
