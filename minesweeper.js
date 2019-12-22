@@ -337,6 +337,11 @@ const badresp = resp => {
   rl.prompt()
 }
 
+const startgame = () => {
+  console.time('\ngame timer')
+  return true
+}
+
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
@@ -396,23 +401,23 @@ class Minesweeper {
           case 'N':
           case 'n':
             this.#currentgame = initgame()
-            // drawBoard(currentgame)
+            drawgame(this.#currentgame)
             rl.setPrompt(this.#nprompt)
-            // startgame()
+            this.#gamerunning = startgame()
             break;
           case 'I':
           case 'i':
             this.#currentgame = initgame('intermediate')
-            // drawBoard(currentgame)
+            drawgame(this.#currentgame)
             rl.setPrompt(this.#iprompt)
-            // startgame()
+            this.#gamerunning = startgame()
             break;
           case 'E':
           case 'e':
             this.#currentgame = initgame('expert')
-            // drawBoard(currentgame)
+            drawgame(this.#currentgame)
             rl.setPrompt(this.#eprompt)
-            // startgame()
+            this.#gamerunning = startgame()
             break;
           case 'Q':
           case 'q':
@@ -429,19 +434,6 @@ class Minesweeper {
       console.log('\nThank you for playing!\n')
       process.exit(0)
     })
-  }
-
-  drawboard() {
-    drawgame(this.#currentgame)
-  }
-
-  drawsolution() {
-    drawgame(this.#currentgame, true)
-  }
-
-  startgame() {
-    this.#gamerunning = true
-    console.time('\ngame timer')
   }
 
   endgame(win) {
