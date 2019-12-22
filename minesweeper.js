@@ -282,7 +282,7 @@ const drawgame = (board, sol) => {
   }
 }
 
-const testpos = (row, col, game) => {
+const testpos = (row, col, game, rl) => {
   const board = game.running.board
   const specials = game.specials
   const checked = game.running.checked
@@ -293,8 +293,7 @@ const testpos = (row, col, game) => {
     const solval = sol[pos]
     board[pos] = solval
     if(solval == 'X') {
-      console.log('hit a mine')
-      // endgame()
+      endgame(game, false, rl)
     } else {
       if(checked[pos] == '.') {
         checked[pos] = 'x'
@@ -331,15 +330,38 @@ const testpos = (row, col, game) => {
   }
 }
 
-const badresp = resp => {
+const badresp = (resp, board) => {
   console.log(`\n  ${resp} is not a valid entry\n`)
-  drawBoard(currentgame)
-  rl.prompt()
+  drawgame(board)
 }
 
 const startgame = () => {
   console.time('\ngame timer')
   return true
+}
+
+const checkgame = (board, rl) =>{
+  const len = board.len
+  const checked = board.running.checked
+  const mines = board.mines
+  let counter = 0
+  for(let count = 0; count < len; count++) {
+    if(checked[count] == '.') counter++
+  }
+  if(counter == mines) endgame(board, true, rl)
+}
+
+const endgame = (board, win, rl) => {
+  console.log()
+  drawgame(board, !win)
+  console.timeEnd('\ngame timer')
+  if(win) {
+    console.log('\nYou won :)')
+  } else {
+    console.log('\nYou lost :(')
+  }
+
+  rl.close()
 }
 
 /*****************************************************************************/
@@ -375,25 +397,28 @@ class Minesweeper {
             const col = parseInt(coordinates[1])
             const rowisi = Number.isInteger(row)
             const colisi = Number.isInteger(col)
-            const rowinrange = row >= 0 && row < currentgame.rows
-            const colinrange = col >=0 && col < currentgame.cols
+            const rowinrange = row >= 0 && row < this.#currentgame.rows
+            const colinrange = col >=0 && col < this.#currentgame.cols
             if(rowisi && colisi && rowinrange && colinrange) {
               testpos(row, col)
-              checkgame()
+              checkgame(this.#currentgame, rl)
               console.log()
-              drawBoard(currentgame)
+              drawgame(this.#currentgame)
               rl.prompt()
             } else {
-              badresp(resp)
+              badresp(resp, this.#currentgame)
+              rl.prompt()
             }
           } else {
-            badresp(resp)
+            badresp(resp, this.#currentgame)
+            rl.prompt()
           }
         } else {
           if(resp == 'Q' || resp == 'q') {
             rl.close()
           } else {
-            badresp(resp)
+            badresp(resp, this.#currentgame)
+            rl.prompt()
           }
         }
       } else {
@@ -434,29 +459,6 @@ class Minesweeper {
       console.log('\nThank you for playing!\n')
       process.exit(0)
     })
-  }
-
-  endgame(win) {
-    this.#gamerunning = false
-    console.log()
-    drawgame(this.#currentgame, !win)
-    console.timeEnd('\ngame timer')
-    if(win) {
-      console.log('\nYou won :)')
-    } else {
-      console.log('\nYou lost :(')
-    }
-  }
-
-  checkgame() {
-    const len = this.#currentgame.len
-    const checked = this.#currentgame.running.checked
-    const mines = this.#currentgame.mines
-    let counter = 0
-    for(let count = 0; count < len; count++) {
-      if(checked[count] == '.') counter++
-    }
-    if(counter == mines) this.endgame(true)
   }
 
   testmine(row, col) {
