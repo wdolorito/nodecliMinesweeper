@@ -1,57 +1,24 @@
-const testpos = (row, col) => {
-  const board = currentgame.running.board
-  const specials = currentgame.specials
-  const checked = currentgame.running.checked
-  const sol = currentgame.solution
-  const len = currentgame.len
-  const pos = getpos(row, col, currentgame.rows, currentgame.cols)
-  if(pos >= 0) {
-    const solval = sol[pos]
-    board[pos] = solval
-    if(solval == 'X') {
-      endgame()
-    } else {
-      if(checked[pos] == '.') {
-        checked[pos] = 'x'
-        if(solval == 0) {
-          const gettests = checkspecials(pos, specials)
-
-          // check top left
-          if(gettests.tl) testpos(row - 1, col - 1)
-
-          // check top
-          if(gettests.t) testpos(row - 1, col)
-
-          // check top right
-          if(gettests.r) testpos(row - 1, col + 1)
-
-          // check left
-          if(gettests.l) testpos(row, col - 1)
-
-          // check right
-          if(gettests.r) testpos(row, col + 1)
-
-          // check bottom left
-          if(gettests.bl) testpos(row + 1, col - 1)
-
-          // check bottom
-          if(gettests.b) testpos(row + 1, col)
-
-          // check bottom right
-          if(gettests.br) testpos(row + 1, col + 1)
-        }
-      }
-    }
-  }
-}
-
-const badresp = resp => {
-  console.log(`\n  ${resp} is not a valid entry\n`)
-  drawBoard(currentgame)
-  rl.prompt()
-}
+const readline = require('readline')
 
 /*****************************************************************************/
+/*****************************************************************************/
+/*****************************************************************************/
+
+const initgame = type => {
+  let newgame = game('novice', 10, 9, 9)
+  switch(type) {
+    case 'novice':
+      break
+    case 'intermediate':
+      newgame = game(type, 40, 16, 16)
+      break
+    case 'expert':
+      newgame = game(type, 99, 16, 30)
+      break
+    default:
+  }
+  return newgame
+}
 
 const game = (newtype, newmines, newrows, newcols) => {
   const len = newrows * newcols
@@ -315,54 +282,153 @@ const drawgame = (board, sol) => {
   }
 }
 
+const testpos = (row, col, game) => {
+  const board = game.running.board
+  const specials = game.specials
+  const checked = game.running.checked
+  const sol = game.solution
+  const len = game.len
+  const pos = getpos(row, col, game.rows, game.cols)
+  if(pos >= 0) {
+    const solval = sol[pos]
+    board[pos] = solval
+    if(solval == 'X') {
+      console.log('hit a mine')
+      // endgame()
+    } else {
+      if(checked[pos] == '.') {
+        checked[pos] = 'x'
+        if(solval == 0) {
+          const gettests = checkspecials(pos, specials)
+
+          // check top left
+          if(gettests.tl) testpos(row - 1, col - 1, game)
+
+          // check top
+          if(gettests.t) testpos(row - 1, col, game)
+
+          // check top right
+          if(gettests.r) testpos(row - 1, col + 1, game)
+
+          // check left
+          if(gettests.l) testpos(row, col - 1, game)
+
+          // check right
+          if(gettests.r) testpos(row, col + 1, game)
+
+          // check bottom left
+          if(gettests.bl) testpos(row + 1, col - 1, game)
+
+          // check bottom
+          if(gettests.b) testpos(row + 1, col, game)
+
+          // check bottom right
+          if(gettests.br) testpos(row + 1, col + 1, game)
+        }
+      }
+    }
+    drawgame(game)
+  }
+}
+
+const badresp = resp => {
+  console.log(`\n  ${resp} is not a valid entry\n`)
+  drawBoard(currentgame)
+  rl.prompt()
+}
+
+/*****************************************************************************/
+/*****************************************************************************/
 /*****************************************************************************/
 
 class Minesweeper {
   #pickgame = 'What game do you want to play?\n\t(N)ovice\n\t(I)ntermediate\n\t(E)xpert\n\t(Q)uit\n'
   #dprompt = 'pick a (row, column) or (Q)uit: '
-  #ngame = '\nNovice game> ' + this.#dprompt
-  #igame = '\nIntermediate game> ' + this.#dprompt
-  #egame = '\nExpert game> ' + this.#dprompt
+  #nprompt = '\nNovice game> ' + this.#dprompt
+  #iprompt = '\nIntermediate game> ' + this.#dprompt
+  #eprompt = '\nExpert game> ' + this.#dprompt
   #currentgame = {}
   #gamerunning = false
 
   constructor() {
-  }
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+      prompt: this.#pickgame
+    })
 
-  get pick() {
-    return this.#pickgame
-  }
+    rl.prompt()
 
-  get nprompt() {
-    return this.#ngame
-  }
-
-  get iprompt() {
-    return this.#igame
-  }
-
-  get eprompt() {
-    return this.#egame
-  }
-
-  get running() {
-    return this.#gamerunning
-  }
-
-  set currentgame(type) {
-    let newgame = game('novice', 10, 9, 9)
-    switch(type) {
-      case 'novice':
-        break
-      case 'intermediate':
-        newgame = game(type, 40, 16, 16)
-        break
-      case 'expert':
-        newgame = game(type, 99, 16, 30)
-        break
-      default:
-    }
-    this.#currentgame = newgame
+    rl.on('line', line => {
+      const resp = line.trim()
+      if(this.#gamerunning) {
+        if(resp.length > 1) {
+          const remwhite = resp.replace(/ /g, '')
+          const coordinates = remwhite.split(',')
+          if(coordinates.length == 2) {
+            const row = parseInt(coordinates[0])
+            const col = parseInt(coordinates[1])
+            const rowisi = Number.isInteger(row)
+            const colisi = Number.isInteger(col)
+            const rowinrange = row >= 0 && row < currentgame.rows
+            const colinrange = col >=0 && col < currentgame.cols
+            if(rowisi && colisi && rowinrange && colinrange) {
+              testpos(row, col)
+              checkgame()
+              console.log()
+              drawBoard(currentgame)
+              rl.prompt()
+            } else {
+              badresp(resp)
+            }
+          } else {
+            badresp(resp)
+          }
+        } else {
+          if(resp == 'Q' || resp == 'q') {
+            rl.close()
+          } else {
+            badresp(resp)
+          }
+        }
+      } else {
+        switch (resp) {
+          case 'N':
+          case 'n':
+            this.#currentgame = initgame()
+            // drawBoard(currentgame)
+            rl.setPrompt(this.#nprompt)
+            // startgame()
+            break;
+          case 'I':
+          case 'i':
+            this.#currentgame = initgame('intermediate')
+            // drawBoard(currentgame)
+            rl.setPrompt(this.#iprompt)
+            // startgame()
+            break;
+          case 'E':
+          case 'e':
+            this.#currentgame = initgame('expert')
+            // drawBoard(currentgame)
+            rl.setPrompt(this.#eprompt)
+            // startgame()
+            break;
+          case 'Q':
+          case 'q':
+            rl.close()
+            break;
+          default:
+            console.log(`\n  ${resp} is not a valid choice\n`)
+            rl.setPrompt(this.#pickgame)
+            break;
+        }
+        rl.prompt()
+      }
+    }).on('close', () => {
+      console.log('\nThank you for playing!\n')
+      process.exit(0)
+    })
   }
 
   drawboard() {
@@ -399,6 +465,10 @@ class Minesweeper {
       if(checked[count] == '.') counter++
     }
     if(counter == mines) this.endgame(true)
+  }
+
+  testmine(row, col) {
+    testpos(row, col, this.#currentgame)
   }
 }
 
