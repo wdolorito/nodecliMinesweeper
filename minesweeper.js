@@ -375,17 +375,16 @@ class Minesweeper {
   #eprompt = '\nExpert game> ' + this.#dprompt
   #currentgame = {}
   #gamerunning = false
+  #rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    prompt: this.#pickgame
+  })
 
   constructor() {
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-      prompt: this.#pickgame
-    })
+    this.#rl.prompt()
 
-    rl.prompt()
-
-    rl.on('line', line => {
+    this.#rl.on('line', line => {
       const resp = line.trim()
       if(this.#gamerunning) {
         if(resp.length > 1) {
@@ -399,25 +398,25 @@ class Minesweeper {
             const rowinrange = row >= 0 && row < this.#currentgame.rows
             const colinrange = col >=0 && col < this.#currentgame.cols
             if(rowisi && colisi && rowinrange && colinrange) {
-              testpos(row, col, this.#currentgame, rl)
-              checkgame(this.#currentgame, rl)
+              testpos(row, col, this.#currentgame, this.#rl)
+              checkgame(this.#currentgame, this.#rl)
               console.log()
               drawgame(this.#currentgame)
-              rl.prompt()
+              this.#rl.prompt()
             } else {
               badresp(resp, this.#currentgame)
-              rl.prompt()
+              this.#rl.prompt()
             }
           } else {
             badresp(resp, this.#currentgame)
-            rl.prompt()
+            this.#rl.prompt()
           }
         } else {
           if(resp == 'Q' || resp == 'q') {
-            rl.close()
+            this.#rl.close()
           } else {
             badresp(resp, this.#currentgame)
-            rl.prompt()
+            this.#rl.prompt()
           }
         }
       } else {
@@ -426,33 +425,33 @@ class Minesweeper {
           case 'n':
             this.#currentgame = initgame()
             drawgame(this.#currentgame)
-            rl.setPrompt(this.#nprompt)
+            this.#rl.setPrompt(this.#nprompt)
             this.#gamerunning = startgame()
             break;
           case 'I':
           case 'i':
             this.#currentgame = initgame('intermediate')
             drawgame(this.#currentgame)
-            rl.setPrompt(this.#iprompt)
+            this.#rl.setPrompt(this.#iprompt)
             this.#gamerunning = startgame()
             break;
           case 'E':
           case 'e':
             this.#currentgame = initgame('expert')
             drawgame(this.#currentgame)
-            rl.setPrompt(this.#eprompt)
+            this.#rl.setPrompt(this.#eprompt)
             this.#gamerunning = startgame()
             break;
           case 'Q':
           case 'q':
-            rl.close()
+            this.#rl.close()
             break;
           default:
             console.log(`\n  ${resp} is not a valid choice\n`)
-            rl.setPrompt(this.#pickgame)
+            this.#rl.setPrompt(this.#pickgame)
             break;
         }
-        rl.prompt()
+        this.#rl.prompt()
       }
     }).on('close', () => {
       console.log('\nThank you for playing!\n')
