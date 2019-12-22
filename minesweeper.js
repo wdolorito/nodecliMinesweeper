@@ -326,7 +326,6 @@ const testpos = (row, col, game, rl) => {
         }
       }
     }
-    drawgame(game)
   }
 }
 
@@ -400,7 +399,7 @@ class Minesweeper {
             const rowinrange = row >= 0 && row < this.#currentgame.rows
             const colinrange = col >=0 && col < this.#currentgame.cols
             if(rowisi && colisi && rowinrange && colinrange) {
-              testpos(row, col)
+              testpos(row, col, this.#currentgame, rl)
               checkgame(this.#currentgame, rl)
               console.log()
               drawgame(this.#currentgame)
@@ -459,10 +458,6 @@ class Minesweeper {
       console.log('\nThank you for playing!\n')
       process.exit(0)
     })
-  }
-
-  testmine(row, col) {
-    testpos(row, col, this.#currentgame)
   }
 }
 
